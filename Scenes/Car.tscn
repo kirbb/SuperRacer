@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://6oub1ojoqooa"]
+
+[ext_resource type="Script" path="res://CarMovement.gd" id="1_uqw8n"]
+[ext_resource type="Texture2D" uid="uid://cgbura2ofokw6" path="res://Images/Car.png" id="2_jgupl"]
+
+[node name="CharacterBody2D" type="CharacterBody2D"]
+script = ExtResource("1_uqw8n")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_jgupl")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(54, -74, 102, -74, 102, -71.4, 103.6, -64, 110.8, -64, 114, -60.8, 114, -54, 120, -54, 120, 54, 114, 54, 114, 62, 111.4, 62, 104, 63.6, 104, 70.8, 100.8, 74, 54, 74, 54, 80, -54, 80, -54, 74, -112, 74, -112, 71.4, -113.6, 64, -120, 64, -120, -64, -113.7, -64, -111.6, -74, -54, -74, -54, -80, 54, -80)

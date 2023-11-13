@@ -4,13 +4,13 @@ extends CharacterBody2D
 @export var acceleration = 1000.0
 @export var deceleration = 1200.0
 
-var max_speed = 60000.0 # max_speed = velocity.length() * ~60
+var max_speed = 100000.0 # max_speed = velocity.length() * ~60
 var max_speed_reverse = -30000.0
 
 var max_turn_speed = 3.0
 var turn_speed_left = 0.0
 var turn_speed_right = 0.0
-var turn_acceleration = .3
+var turn_acceleration = .5
 var turn_deceleration = .2
 
 # Control the positive and negatives (the forward/back, left/right)
@@ -21,22 +21,27 @@ func get_input(delta):
 	move_direction = Input.get_axis("Decelerate", "Accelerate")
 	turn_direction = Input.get_axis("Turn Left", "Turn Right")
 	
+	if speed < 0: turn_direction = -turn_direction
+	
 	# This is so we can't turn while stopped
-	if (absf(velocity.length()) <= 100.0):
+	# velocity.length() handles forward and reverse
+	if (velocity.length() <= 200.0):
 		turn_direction = 0
 	
 	# While we haven't reached max speed and pushing forward, we add to the speed
 	if move_direction == 1 && speed < max_speed:
+		if (speed < 0): speed = approach_zero(speed, deceleration)
 		speed += acceleration
 		velocity = transform.x * (speed * delta)
 	elif move_direction == -1 && speed > max_speed_reverse:
+		if (speed > 0): speed = approach_zero(speed, deceleration)
 		speed -= acceleration
 		velocity = transform.x * (speed * delta)
 	else:
 		if (velocity.length() <= 10.0): # If we get close enough to zero, just stop the car
 			velocity = Vector2.ZERO
 		else:
-			speed = approach_zero(speed, deceleration)
+			speed = approach_zero(speed, deceleration) # Slow down while not pressing on the gas
 			velocity = transform.x * (speed * delta)
 	
 	if turn_direction == 0:
@@ -44,6 +49,7 @@ func get_input(delta):
 			turn_speed_right = 0
 			turn_speed_left = 0
 		else:
+			# Steering slowly "resets" when no input is provided
 			turn_speed_right = approach_zero(turn_speed_right, turn_deceleration)
 			turn_speed_left = approach_zero(turn_speed_left, turn_deceleration)
 	elif (turn_direction == 1):
@@ -60,8 +66,7 @@ func get_input(delta):
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	get_input(delta)
-	move_and_slide()
-	#print(velocity.length(), " ", speed)
+	if move_and_slide(): speed = speed
 
 func approach_zero(speed_, deceleration_):
 	if speed_ > 0:

@@ -66,7 +66,8 @@ func get_input(delta):
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _physics_process(delta):
 	get_input(delta)
-	if move_and_slide(): speed = speed
+	move_and_slide()
+	#if move_and_slide(): speed = approach_zero(speed, deceleration * 2)
 
 func approach_zero(speed_, deceleration_):
 	if speed_ > 0:

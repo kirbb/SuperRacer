@@ -67,7 +67,9 @@ func get_input(delta):
 func _physics_process(delta):
 	get_input(delta)
 	move_and_slide()
-	#if move_and_slide(): speed = approach_zero(speed, deceleration * 2)
+	var collision = get_last_slide_collision()
+	if collision != null:
+		print(collision.get_angle())
 
 func approach_zero(speed_, deceleration_):
 	if speed_ > 0:
